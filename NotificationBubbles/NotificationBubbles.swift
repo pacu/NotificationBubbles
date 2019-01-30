@@ -85,16 +85,20 @@ public class NotificationBubble {
         let animationOptions = userOptions?[NotificationBubble.Style.Key.animation] as? NotificationBubble.Animation ?? defaultAnimation
         let marginOption = userOptions?[NotificationBubble.Style.Key.margins] as? UIEdgeInsets ?? defaultMargins
         let bubbleDuration = userOptions?[NotificationBubble.Style.Key.duration] as? TimeInterval ?? defaultDuration
-     
+        
+        bubble.backgroundColor = backgroundColor
+        bubble.layer.cornerRadius = cornerRadius
+        
         switch animationOptions {
         case .none:
             view.addSubview(bubble)
-            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: -size.height, width: size.width, height: size.width)
+            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: marginOption.top, width: size.width, height: size.width)
+            view.bringSubview(toFront: bubble)
             
         case .fade(let duration):
             bubble.alpha = 0
             view.addSubview(bubble)
-            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: -size.height, width: size.width, height: size.width)
+            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: marginOption.top, width: size.width, height: size.width)
             UIView.animate(withDuration: duration) {
                 bubble.alpha = 1.0
             }
@@ -117,9 +121,9 @@ public class NotificationBubble {
         let displayedBubble = DisplayedBubbleView(displayingView: view, bubbleView: bubble, options: finalOptions)
         
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
-            displayedBubble.hide()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
+//            displayedBubble.hide()
+//        }
         
         return displayedBubble
         
