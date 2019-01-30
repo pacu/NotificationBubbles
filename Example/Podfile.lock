@@ -1,0 +1,16 @@
+PODS:
+  - NotificationBubbles (0.1.0)
+
+DEPENDENCIES:
+  - NotificationBubbles (from `../`)
+
+EXTERNAL SOURCES:
+  NotificationBubbles:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  NotificationBubbles: 279ac4af77c6fec21b69e8305b036e4ecc1a71b5
+
+PODFILE CHECKSUM: 2fb6735e2d523c7a87dd9f787309aa9ab8014eee
+
+COCOAPODS: 1.5.3

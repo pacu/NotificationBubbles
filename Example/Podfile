@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'NotificationBubbles_Example' do
+  pod 'NotificationBubbles', :path => '../'
+
+  target 'NotificationBubbles_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

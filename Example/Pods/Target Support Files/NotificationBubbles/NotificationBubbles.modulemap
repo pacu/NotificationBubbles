@@ -1,0 +1,6 @@
+framework module NotificationBubbles {
+  umbrella header "NotificationBubbles-umbrella.h"
+
+  export *
+  module * { export * }
+}
