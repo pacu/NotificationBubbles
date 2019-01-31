@@ -61,6 +61,7 @@ public class NotificationBubble {
     private static var defaultBackgroundColor = UIColor.black
     private static var defaultCornerRadius = CGFloat(8)
     
+    
     public enum Animation {
         case none
         case slide(duration: TimeInterval)
@@ -86,47 +87,53 @@ public class NotificationBubble {
         let marginOption = userOptions?[NotificationBubble.Style.Key.margins] as? UIEdgeInsets ?? defaultMargins
         let bubbleDuration = userOptions?[NotificationBubble.Style.Key.duration] as? TimeInterval ?? defaultDuration
         
-        bubble.backgroundColor = backgroundColor
-        bubble.layer.cornerRadius = cornerRadius
-        
+        bubble.label.backgroundColor = backgroundColor
+        bubble.label.layer.cornerRadius = cornerRadius
+        bubble.label.layer.masksToBounds = true
+        bubble.label.attributedText = attributedText
+        bubble.layoutIfNeeded()
         switch animationOptions {
         case .none:
             view.addSubview(bubble)
-            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: marginOption.top, width: size.width, height: size.width)
+            bubble.alignToSuperviewHorizontalCenter()
+            bubble.constraintTopToSuperviewTop(constant: marginOption.top)
             view.bringSubview(toFront: bubble)
-            
         case .fade(let duration):
             bubble.alpha = 0
             view.addSubview(bubble)
-            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: marginOption.top, width: size.width, height: size.width)
+            bubble.alignToSuperviewHorizontalCenter()
+            bubble.constraintTopToSuperviewTop(constant: marginOption.top)
             UIView.animate(withDuration: duration) {
                 bubble.alpha = 1.0
             }
         case .slide(let duration):
-            
-            bubble.frame = CGRect(x: view.frame.midX - size.width/2, y: -size.height, width: size.width, height: size.width)
+            bubble.frame = CGRect(x: view.bounds.midX - (bubble.frame.midX), y: 0, width: bubble.frame.width, height: bubble.frame.height)
             view.addSubview(bubble)
-            UIView.animate(withDuration: duration) {
-                bubble.transform = CGAffineTransform.init(translationX: 0, y: size.height + marginOption.top)
-            }
+            
+            
+            UIView.animate(withDuration: duration, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+                bubble.frame.origin.y += 120
+            }, completion: { _ in
+                
+                print("frame: \(bubble)")
+            })
+            
         }
         
-    
         let finalOptions: NotificationBubbleOptions = [NotificationBubble.Style.Key.backgroundColor : backgroundColor,
                                                        NotificationBubble.Style.Key.cornerRadius : cornerRadius,
                                                        NotificationBubble.Style.Key.animation :animationOptions,
                                                        NotificationBubble.Style.Key.margins : marginOption,
                                                        NotificationBubble.Style.Key.duration :
                                                         bubbleDuration]
+        
         let displayedBubble = DisplayedBubbleView(displayingView: view, bubbleView: bubble, options: finalOptions)
-        
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
-//            displayedBubble.hide()
-//        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
+            displayedBubble.hide()
+        }
         
         return displayedBubble
-        
     }
     
     static private func hide(bubble: DisplayedBubbleView) {
@@ -148,8 +155,8 @@ public class NotificationBubble {
             bubbleView.removeFromSuperview()
             break
         case .slide(let duration):
-            UIView.animate(withDuration: duration, animations: {
-                bubbleView.transform = CGAffineTransform.identity
+            UIView.animate(withDuration: duration, delay: 0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                bubbleView.frame.origin.y -= 120
             }) { _ in
                 bubbleView.removeFromSuperview()
             }
@@ -177,32 +184,47 @@ public struct DisplayedBubbleView {
 
 class NotificationBubbleView: UIView {
     
-    private var label: UILabel! = UILabel(frame: CGRect.zero)
+    var label: UILabel! = UILabel(frame: CGRect.zero)
     var tapBlock: (()->())?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        translatesAutoresizingMaskIntoConstraints = false
         setup()
     }
     
     
     private func setup() {
+        self.label.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        self.backgroundColor = UIColor.clear
+        self.layer.backgroundColor = UIColor.clear.cgColor
+        self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds,
+                     cornerRadius: self.layer.cornerRadius).cgPath
+        self.layer.shadowOffset = CGSize(width: -10, height: 10)
+        self.layer.shadowOpacity = 1
+        self.layer.shadowColor = UIColor.black.cgColor
+        
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(label)
         
-        translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[label]-(right)-|", options: NSLayoutConstraint.FormatOptions(),
-                                                                   metrics: ["left": 0, "right": 0],
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[label]-(right)-|",
+                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   metrics: ["left": 8, "right": 8],
                                                                    views: ["label": label]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[label]-(down)-|", options: NSLayoutConstraint.FormatOptions(),
-                                                                   metrics: ["up": 0, "down": 0],
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[label]-(down)-|",
+                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   metrics: ["up": 8, "down": 8],
                                                                    views: ["label": label]))
         label.numberOfLines = 0
         label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
-        label.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .horizontal)
-        label.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .vertical)
+        label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .vertical)
+        label.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .horizontal)
+        label.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .vertical)
         label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
         
+        self.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         self.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap(_:))))
         
     }

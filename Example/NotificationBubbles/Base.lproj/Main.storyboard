@@ -34,7 +34,7 @@
                                 </connections>
                             </textField>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="7Qa-FC-3aX">
-                                <rect key="frame" x="56" y="293" width="263" height="28"/>
+                                <rect key="frame" x="89" y="293" width="197" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="2sy-tF-zPj"/>
                                 </constraints>
@@ -44,8 +44,19 @@
                                     <segment title="Neutral"/>
                                 </segments>
                             </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jcI-uT-1kr">
+                                <rect key="frame" x="45.5" y="360" width="284" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="fSW-Xh-XOz"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="No animation"/>
+                                    <segment title="fade 0.5s"/>
+                                    <segment title="slide"/>
+                                </segments>
+                            </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ukj-SO-prK">
-                                <rect key="frame" x="169" y="388" width="37" height="30"/>
+                                <rect key="frame" x="169" y="434" width="37" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="DG8-KK-ggP"/>
                                 </constraints>
@@ -57,18 +68,20 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Ukj-SO-prK" firstAttribute="top" secondItem="7Qa-FC-3aX" secondAttribute="bottom" constant="68" id="2in-Cy-yjg"/>
-                            <constraint firstItem="7Qa-FC-3aX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="40" id="4zI-4R-rs2"/>
+                            <constraint firstItem="Ukj-SO-prK" firstAttribute="top" secondItem="jcI-uT-1kr" secondAttribute="bottom" constant="46" id="8nx-D3-KQa"/>
+                            <constraint firstItem="jcI-uT-1kr" firstAttribute="top" secondItem="7Qa-FC-3aX" secondAttribute="bottom" constant="40" id="ET4-v7-dYw"/>
                             <constraint firstItem="x07-OQ-BTo" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Mni-Mu-V9B"/>
+                            <constraint firstItem="7Qa-FC-3aX" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="OHD-nt-Hbl"/>
                             <constraint firstItem="Ukj-SO-prK" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="TCS-nb-0a5"/>
                             <constraint firstItem="7Qa-FC-3aX" firstAttribute="top" secondItem="x07-OQ-BTo" secondAttribute="bottom" constant="43" id="TED-dS-V4Y"/>
                             <constraint firstAttribute="trailingMargin" secondItem="x07-OQ-BTo" secondAttribute="trailing" constant="40" id="UCu-nU-3pU"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="7Qa-FC-3aX" secondAttribute="trailing" constant="40" id="h6X-iW-hed"/>
+                            <constraint firstItem="jcI-uT-1kr" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="bjv-2O-kAG"/>
                             <constraint firstItem="x07-OQ-BTo" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="40" id="iDY-h8-Lma"/>
                             <constraint firstItem="x07-OQ-BTo" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="200" id="oTb-pX-7no"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="animationSegment" destination="jcI-uT-1kr" id="YQy-Cr-7jM"/>
                         <outlet property="button" destination="Ukj-SO-prK" id="O2E-ng-fGo"/>
                         <outlet property="segment" destination="7Qa-FC-3aX" id="llh-5j-sIY"/>
                         <outlet property="textField" destination="x07-OQ-BTo" id="75q-Wz-IOp"/>

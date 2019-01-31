@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var button: UIButton!
-    
+    @IBOutlet weak var animationSegment: UISegmentedControl!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -21,13 +21,24 @@ class ViewController: UIViewController {
     
     @IBAction func show(_ sender: Any) {
         var options: [NotificationBubble.Style]? = nil
+        var animation: NotificationBubble.Animation = NotificationBubble.Animation.none
+        
+        switch animationSegment.selectedSegmentIndex {
+            case 0:
+                animation = .none
+            case 1:
+                animation = .fade(duration: 0.5)
+            default:
+                animation = .slide(duration: 0.5)
+        }
+        
         switch segment.selectedSegmentIndex {
-        case 0:
-        options = NotificationBubble.sucessOptions
-        case 1:
-        options = NotificationBubble.errorOptions
-        default:
-        options = NotificationBubble.darkOptions
+            case 0:
+                options = NotificationBubble.sucessOptions(animation: animation)
+            case 1:
+                options = NotificationBubble.errorOptions(animation: animation)
+            default:
+                options = NotificationBubble.neutralOptions(animation: animation)
         }
     
         NotificationBubble.display(in: self.view, options: options, attributedText: NSAttributedString(string: self.textField.text ?? ""), handleTap: {
@@ -35,10 +46,7 @@ class ViewController: UIViewController {
     
         })
     
-    }
-
-   
-    
+    }  
 }
 
 extension ViewController: UITextFieldDelegate {
