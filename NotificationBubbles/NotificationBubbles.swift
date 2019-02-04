@@ -87,9 +87,9 @@ public class NotificationBubble {
         let marginOption = userOptions?[NotificationBubble.Style.Key.margins] as? UIEdgeInsets ?? defaultMargins
         let bubbleDuration = userOptions?[NotificationBubble.Style.Key.duration] as? TimeInterval ?? defaultDuration
         
-        bubble.label.backgroundColor = backgroundColor
-        bubble.label.layer.cornerRadius = cornerRadius
-        bubble.label.layer.masksToBounds = true
+        bubble.containerView.backgroundColor = backgroundColor
+        bubble.containerView.layer.cornerRadius = cornerRadius
+        bubble.containerView.layer.masksToBounds = true
         bubble.label.attributedText = attributedText
         bubble.layoutIfNeeded()
         switch animationOptions {
@@ -186,6 +186,7 @@ class NotificationBubbleView: UIView {
     
     var label: UILabel! = UILabel(frame: CGRect.zero)
     var tapBlock: (()->())?
+    var containerView = UIView(frame: CGRect.zero)
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
@@ -193,19 +194,35 @@ class NotificationBubbleView: UIView {
     }
     
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds,
+                                             cornerRadius: self.layer.cornerRadius).cgPath
+    }
     private func setup() {
-        self.label.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        self.containerView.translatesAutoresizingMaskIntoConstraints = false
+        self.containerView.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        self.addSubview(containerView)
+        
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[containerView]-(right)-|",
+                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   metrics: ["left": 0, "right": 0],
+                                                                   views: ["containerView": containerView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[containerView]-(down)-|",
+                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   metrics: ["up": 0, "down": 0],
+                                                                   views: ["containerView": containerView]))
+        
         self.backgroundColor = UIColor.clear
         self.layer.backgroundColor = UIColor.clear.cgColor
-        self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds,
-                     cornerRadius: self.layer.cornerRadius).cgPath
-        self.layer.shadowOffset = CGSize(width: -10, height: 10)
-        self.layer.shadowOpacity = 1
-        self.layer.shadowColor = UIColor.black.cgColor
+        
+        self.layer.shadowOffset = CGSize(width: 4, height: 4)
+        self.layer.shadowOpacity = 0.2
+        self.layer.shadowColor = UIColor.lightGray.cgColor
         
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(label)
+        containerView.addSubview(label)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[label]-(right)-|",
                                                                    options: NSLayoutConstraint.FormatOptions(),
@@ -218,13 +235,16 @@ class NotificationBubbleView: UIView {
         label.numberOfLines = 0
         label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
         label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .vertical)
-        label.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .horizontal)
+        label.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         label.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .vertical)
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
         
+        self.containerView.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.containerView.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         self.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         self.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        
         self.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap(_:))))
         
     }
