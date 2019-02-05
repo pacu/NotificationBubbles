@@ -42,7 +42,7 @@ class ViewController: UIViewController {
         }
     
         NotificationBubble.display(in: self.view, options: options, attributedText: NSAttributedString(string: self.textField.text ?? ""), handleTap: {
-        self.present(UIAlertController.init(title: "", message: "bubble tapped", preferredStyle: UIAlertControllerStyle.alert), animated: true, completion: nil)
+        self.present(UIAlertController.init(title: "", message: "bubble tapped", preferredStyle: UIAlertController.Style.alert), animated: true, completion: nil)
     
         })
     

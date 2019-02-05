@@ -97,7 +97,7 @@ public class NotificationBubble {
             view.addSubview(bubble)
             bubble.alignToSuperviewHorizontalCenter()
             bubble.constraintTopToSuperviewTop(constant: marginOption.top)
-            view.bringSubview(toFront: bubble)
+            view.bringSubviewToFront(bubble)
         case .fade(let duration):
             bubble.alpha = 0
             view.addSubview(bubble)
@@ -111,7 +111,7 @@ public class NotificationBubble {
             view.addSubview(bubble)
             
             
-            UIView.animate(withDuration: duration, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+            UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions.curveEaseIn, animations: {
                 bubble.frame.origin.y += 120
             }, completion: { _ in
                 
@@ -155,7 +155,7 @@ public class NotificationBubble {
             bubbleView.removeFromSuperview()
             break
         case .slide(let duration):
-            UIView.animate(withDuration: duration, delay: 0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                 bubbleView.frame.origin.y -= 120
             }) { _ in
                 bubbleView.removeFromSuperview()
@@ -205,11 +205,11 @@ class NotificationBubbleView: UIView {
         self.addSubview(containerView)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[containerView]-(right)-|",
-                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["left": 0, "right": 0],
                                                                    views: ["containerView": containerView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[containerView]-(down)-|",
-                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["up": 0, "down": 0],
                                                                    views: ["containerView": containerView]))
         
@@ -225,11 +225,11 @@ class NotificationBubbleView: UIView {
         containerView.addSubview(label)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[label]-(right)-|",
-                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["left": 8, "right": 8],
                                                                    views: ["label": label]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[label]-(down)-|",
-                                                                   options: NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["up": 8, "down": 8],
                                                                    views: ["label": label]))
         label.numberOfLines = 0
