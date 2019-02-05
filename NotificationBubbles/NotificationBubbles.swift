@@ -97,20 +97,28 @@ public class NotificationBubble {
             view.addSubview(bubble)
             bubble.alignToSuperviewHorizontalCenter()
             bubble.constraintTopToSuperviewTop(constant: marginOption.top)
+            if size.width > view.bounds.size.width {
+                bubble.constraintTo(width: view.bounds.size.width - 32)
+            }
             view.bringSubviewToFront(bubble)
         case .fade(let duration):
             bubble.alpha = 0
             view.addSubview(bubble)
             bubble.alignToSuperviewHorizontalCenter()
             bubble.constraintTopToSuperviewTop(constant: marginOption.top)
+            if size.width > view.bounds.size.width {
+                bubble.constraintTo(width: view.bounds.size.width - 32)
+            }
             UIView.animate(withDuration: duration) {
                 bubble.alpha = 1.0
             }
         case .slide(let duration):
             bubble.frame = CGRect(x: view.bounds.midX - (bubble.frame.midX), y: 0, width: bubble.frame.width, height: bubble.frame.height)
             view.addSubview(bubble)
-            
-            
+            bubble.alignToSuperviewHorizontalCenter()
+            if size.width > view.bounds.size.width {
+                bubble.constraintTo(width: view.bounds.size.width - 32)
+            }
             UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions.curveEaseIn, animations: {
                 bubble.frame.origin.y += 120
             }, completion: { _ in
@@ -205,11 +213,11 @@ class NotificationBubbleView: UIView {
         self.addSubview(containerView)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[containerView]-(right)-|",
-                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["left": 0, "right": 0],
                                                                    views: ["containerView": containerView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[containerView]-(down)-|",
-                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["up": 0, "down": 0],
                                                                    views: ["containerView": containerView]))
         
@@ -225,25 +233,25 @@ class NotificationBubbleView: UIView {
         containerView.addSubview(label)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[label]-(right)-|",
-                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["left": 8, "right": 8],
                                                                    views: ["label": label]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(up)-[label]-(down)-|",
-                                                                   options: NSLayoutConstraint.NSLayoutConstraint.FormatOptions(),
+                                                                   options: NSLayoutConstraint.FormatOptions(),
                                                                    metrics: ["up": 8, "down": 8],
                                                                    views: ["label": label]))
         label.numberOfLines = 0
-        label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
-        label.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .vertical)
-        label.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        label.setContentCompressionResistancePriority(UILayoutPriority(750), for: .horizontal)
+        label.setContentCompressionResistancePriority(UILayoutPriority(999), for: .vertical)
+        label.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .horizontal)
         label.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .vertical)
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
         
-        self.containerView.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
-        self.containerView.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
-        self.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
-        self.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.containerView.setContentHuggingPriority(UILayoutPriority(rawValue: 750), for: .horizontal)
+        self.containerView.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 999), for: .horizontal)
+        self.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .horizontal)
+        self.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 750), for: .horizontal)
         
         self.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap(_:))))
         
