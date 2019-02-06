@@ -61,3 +61,28 @@ extension ViewController: UITextFieldDelegate {
     }
 }
 
+public extension NotificationBubble {
+    public static func sucessOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+        return [ NotificationBubble.Style.animation(animation),
+                 NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
+                 NotificationBubble.Style.cornerRadius(8),
+                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.backgroundColor(UIColor.green)]
+    }
+    
+    public static func errorOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+        return [ NotificationBubble.Style.animation(animation),
+                 NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
+                 NotificationBubble.Style.cornerRadius(8),
+                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.backgroundColor(UIColor.red)]
+    }
+    
+    public static func neutralOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+        return [ NotificationBubble.Style.animation(animation),
+                 NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
+                 NotificationBubble.Style.cornerRadius(8),
+                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.backgroundColor(UIColor.lightGray)]
+    }
+}
