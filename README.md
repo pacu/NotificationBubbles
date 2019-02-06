@@ -7,7 +7,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 NotificationBubble is a class that displays a notification based on Options defining it's style into a UIView.
 
 Example: display a text input from a textfield, using a bubble that can handle a block when taapped. 
-```
+``` swift
   NotificationBubble.display(in: self.view, options: options, attributedText: NSAttributedString(string: self.textField.text ?? ""), handleTap: {
         self.present(UIAlertController.init(title: "", message: "bubble tapped", preferredStyle: UIAlertController.Style.alert), animated: true, completion: nil)
     
