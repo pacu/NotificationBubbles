@@ -1,5 +1,5 @@
 PODS:
-  - NotificationBubbles (0.1.0)
+  - NotificationBubbles (0.1.1)
 
 DEPENDENCIES:
   - NotificationBubbles (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  NotificationBubbles: 279ac4af77c6fec21b69e8305b036e4ecc1a71b5
+  NotificationBubbles: dcae798b7c38300724d9658160453bdf0682aa01
 
 PODFILE CHECKSUM: 2fb6735e2d523c7a87dd9f787309aa9ab8014eee
 
