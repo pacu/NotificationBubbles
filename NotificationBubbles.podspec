@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'NotificationBubbles'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'Straight out-of-the-box notification bubbles'
 
   s.description      = <<-DESC
