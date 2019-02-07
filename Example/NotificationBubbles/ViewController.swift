@@ -11,8 +11,10 @@ import NotificationBubbles
 class ViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var segment: UISegmentedControl!
+    @IBOutlet weak var bubbleDurationSegment: UISegmentedControl!
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var animationSegment: UISegmentedControl!
+    var displayedBubble: DisplayedBubbleView?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -32,19 +34,39 @@ class ViewController: UIViewController {
                 animation = .slide(duration: 0.5)
         }
         
+        var duration: TimeInterval = 5
+        
+        switch bubbleDurationSegment.selectedSegmentIndex {
+        case 0:
+            duration = -1.0
+        case 1:
+            duration = 2.0
+        default:
+            duration = 5
+        }
+        
         switch segment.selectedSegmentIndex {
             case 0:
-                options = NotificationBubble.sucessOptions(animation: animation)
+                options = NotificationBubble.sucessOptions(animation: animation, duration: duration)
             case 1:
-                options = NotificationBubble.errorOptions(animation: animation)
+                options = NotificationBubble.errorOptions(animation: animation, duration: duration)
             default:
                 options = NotificationBubble.neutralOptions(animation: animation)
         }
     
-        NotificationBubble.display(in: self.view, options: options, attributedText: NSAttributedString(string: self.textField.text ?? ""), handleTap: {
-        self.present(UIAlertController.init(title: "", message: "bubble tapped", preferredStyle: UIAlertController.Style.alert), animated: true, completion: nil)
-    
+        displayedBubble = NotificationBubble.display(in: self.view, options: options, attributedText: NSAttributedString(string: self.textField.text ?? ""), handleTap: {
+            let alert = UIAlertController.init(title: "", message: "bubble tapped", preferredStyle: UIAlertController.Style.alert)
+            
+            alert.addAction(UIAlertAction.init(title: "close", style: UIAlertAction.Style.cancel, handler: { _ in
+                alert.dismiss(animated: true, completion: nil)
+                
+            }))
+            self.present(alert, animated: true, completion: nil)
+            self.displayedBubble?.hide()
+            
         })
+        
+        
     
     }  
 }
@@ -62,27 +84,27 @@ extension ViewController: UITextFieldDelegate {
 }
 
 public extension NotificationBubble {
-    public static func sucessOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+    static func sucessOptions(animation: NotificationBubble.Animation, duration: TimeInterval = 5) -> [NotificationBubble.Style] {
         return [ NotificationBubble.Style.animation(animation),
                  NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
                  NotificationBubble.Style.cornerRadius(8),
-                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.duration(timeInterval: duration),
                  NotificationBubble.Style.backgroundColor(UIColor.green)]
     }
     
-    public static func errorOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+    static func errorOptions(animation: NotificationBubble.Animation, duration: TimeInterval = 5) -> [NotificationBubble.Style] {
         return [ NotificationBubble.Style.animation(animation),
                  NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
                  NotificationBubble.Style.cornerRadius(8),
-                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.duration(timeInterval: duration),
                  NotificationBubble.Style.backgroundColor(UIColor.red)]
     }
     
-    public static func neutralOptions(animation: NotificationBubble.Animation) -> [NotificationBubble.Style] {
+    static func neutralOptions(animation: NotificationBubble.Animation, duration: TimeInterval = 5) -> [NotificationBubble.Style] {
         return [ NotificationBubble.Style.animation(animation),
                  NotificationBubble.Style.margins(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
                  NotificationBubble.Style.cornerRadius(8),
-                 NotificationBubble.Style.duration(timeInterval: 5),
+                 NotificationBubble.Style.duration(timeInterval: duration),
                  NotificationBubble.Style.backgroundColor(UIColor.lightGray)]
     }
 }

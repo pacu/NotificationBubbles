@@ -10,6 +10,9 @@ import UIKit
 
 public typealias NotificationBubbleOptions = [String: Any]
 public class NotificationBubble {
+    public struct Constants {
+        static let NoHide = TimeInterval(-1)
+    }
     public enum Style {
         
         public struct Key {
@@ -19,9 +22,13 @@ public class NotificationBubble {
             static let duration = "duration"
             static let animation = "animation"
         }
+        
+        
         case backgroundColor(_ color: UIColor)
         case cornerRadius(_ radius: CGFloat)
         case margins(_ inset: UIEdgeInsets)
+        
+        // Use .duration(timeInterval: NotificationBubble.Constants.NoHide) for a permanent notification
         case duration(timeInterval: TimeInterval)
         case animation(_ options: NotificationBubble.Animation)
         var value: Any {
@@ -47,7 +54,7 @@ public class NotificationBubble {
             case .margins(_):
                 return Key.margins
             case .duration(_):
-                return Key.margins
+                return Key.duration
             case .animation(_):
                 return Key.animation
             }
@@ -72,7 +79,7 @@ public class NotificationBubble {
         }
     }
     
-    @discardableResult public static func display(in view: UIView, options: [NotificationBubble.Style]?, attributedText: NSAttributedString, handleTap: ()->()) -> DisplayedBubbleView {
+    @discardableResult public static func display(in view: UIView, options: [NotificationBubble.Style]?, attributedText: NSAttributedString, handleTap: @escaping ()->()) -> DisplayedBubbleView {
         
         let size = attributedText.size()
         
@@ -86,7 +93,7 @@ public class NotificationBubble {
         let animationOptions = userOptions?[NotificationBubble.Style.Key.animation] as? NotificationBubble.Animation ?? defaultAnimation
         let marginOption = userOptions?[NotificationBubble.Style.Key.margins] as? UIEdgeInsets ?? defaultMargins
         let bubbleDuration = userOptions?[NotificationBubble.Style.Key.duration] as? TimeInterval ?? defaultDuration
-        
+        bubble.tapBlock = handleTap
         bubble.containerView.backgroundColor = backgroundColor
         bubble.containerView.layer.cornerRadius = cornerRadius
         bubble.containerView.layer.masksToBounds = true
@@ -136,9 +143,11 @@ public class NotificationBubble {
                                                         bubbleDuration]
         
         let displayedBubble = DisplayedBubbleView(displayingView: view, bubbleView: bubble, options: finalOptions)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
-            displayedBubble.hide()
+        
+        if bubbleDuration > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + bubbleDuration) {
+                displayedBubble.hide()
+            }
         }
         
         return displayedBubble
@@ -164,7 +173,7 @@ public class NotificationBubble {
             break
         case .slide(let duration):
             UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
-                bubbleView.frame.origin.y -= 120
+                bubbleView.frame.origin.y = -bubbleView.frame.height
             }) { _ in
                 bubbleView.removeFromSuperview()
             }
@@ -195,6 +204,7 @@ class NotificationBubbleView: UIView {
     var label: UILabel! = UILabel(frame: CGRect.zero)
     var tapBlock: (()->())?
     var containerView = UIView(frame: CGRect.zero)
+    fileprivate var hideOnTap: Bool = true
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
@@ -210,6 +220,7 @@ class NotificationBubbleView: UIView {
     private func setup() {
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         self.containerView.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+
         self.addSubview(containerView)
         
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(left)-[containerView]-(right)-|",
@@ -252,12 +263,11 @@ class NotificationBubbleView: UIView {
         self.containerView.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 999), for: .horizontal)
         self.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .horizontal)
         self.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 750), for: .horizontal)
-        
-        self.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap(_:))))
+        containerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap(_:))))
         
     }
     
-    @objc func handleTap(_ gesture: UIGestureRecognizer) {
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
         tapBlock?()
     }
     required init?(coder aDecoder: NSCoder) {
