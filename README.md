@@ -1,4 +1,4 @@
-# NotificationBubbles
+# NotificationBubbles [![Build Status](https://travis-ci.com/pacu/NotificationBubbles.svg?branch=master)](https://travis-ci.com/pacu/NotificationBubbles)
 
 ## Example
 
