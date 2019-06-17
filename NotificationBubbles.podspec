@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'NotificationBubbles'
-  s.version          = '0.1.1'
+  s.version          = '1.0.0'
   s.summary          = 'Straight out-of-the-box notification bubbles'
 
   s.description      = <<-DESC
@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/pacu/NotificationBubbles.git', :tag => s.version.to_s }
   
   s.ios.deployment_target = '11.0'
-  s.source_files = 'NotificationBubbles/**/*'
+  s.source_files = 'Sources/**/*.swift'
 end

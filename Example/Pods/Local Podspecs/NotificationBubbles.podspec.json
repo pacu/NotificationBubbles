@@ -1,6 +1,6 @@
 {
   "name": "NotificationBubbles",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "summary": "Straight out-of-the-box notification bubbles",
   "description": "Just a rounded bubble to show text for an instant",
   "homepage": "https://github.com/pacu/NotificationBubbles",
@@ -13,10 +13,10 @@
   },
   "source": {
     "git": "https://github.com/pacu/NotificationBubbles.git",
-    "tag": "0.1.1"
+    "tag": "1.0.0"
   },
   "platforms": {
     "ios": "11.0"
   },
-  "source_files": "NotificationBubbles/**/*"
+  "source_files": "Sources/**/*.swift"
 }
