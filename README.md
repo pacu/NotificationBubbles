@@ -50,12 +50,19 @@ a gray bubble
 
 ## Installation
 
+### Cocoapods
 NotificationBubbles is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'NotificationBubbles'
 ```
+
+### Swift Package Manager
+NotificationBubbles is available through Swift Package Manager. To install it, simply add the following dependency to your Package.swift
+``` swift
+.package(url: "https://github.com/pacu/NotificationBubbles.git", from: "1.0.0")
+``` swift
 
 ## Usage
 See example project
