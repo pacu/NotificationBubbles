@@ -3,12 +3,12 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 
-osx_image: xcode10.3
+osx_image: xcode10.2
 language: swift
 xcode_project: NotificationBubbles.xcworkspace # path to your xcodeproj folder
 xcode_scheme: NotificationBubbles_Example
 xcode_destination: platform=iOS Simulator,OS=12.2,name=iPhone 5s
-language: swift
+language: objective-c
 cache: cocoapods
 podfile: Example/Podfile
 before_install:
